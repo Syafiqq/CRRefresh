@@ -35,7 +35,11 @@ class CRRefreshBundle {
     
     @discardableResult
     static func bundle(name: String, for aClass: Swift.AnyClass) -> CRRefreshBundle? {
+        #if SWIFT_PACKAGE
+        let bundle = Bundle.module
+        #else
         let bundle = Bundle(for: aClass)
+        #endif
         if let path = bundle.path(forResource: name, ofType: "bundle") {
             if let bundle = Bundle(path: path) {
                 return CRRefreshBundle(bundle: bundle)
