@@ -65,7 +65,13 @@ open class CRRefreshComponent: UIView {
     fileprivate var isIgnoreObserving     = false
     
     fileprivate(set) var isRefreshing     = false
-    
+
+    /// Inset UIKit adds on top of `contentInset` (safe area under a translucent bar); 0 when nothing is under a bar.
+    public var systemInsetTop: CGFloat {
+        guard let scrollView = scrollView else { return 0 }
+        return scrollView.adjustedContentInset.top - scrollView.contentInset.top
+    }
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         autoresizingMask = [.flexibleLeftMargin, .flexibleWidth, .flexibleRightMargin]

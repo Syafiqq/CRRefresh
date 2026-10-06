@@ -67,7 +67,7 @@ open class CRRefreshHeaderView: CRRefreshComponent {
         insetTDelta          = -animator.execute
         holdInsetTDelta      = -(animator.execute - animator.hold)
         var point = scrollView.contentOffset;
-        point.y = -insets.top
+        point.y = -(insets.top + systemInsetTop)
         UIView.animate(withDuration: CRRefreshComponent.animationDuration, animations: {
             
             scrollView.contentOffset.y = self.previousOffsetY
@@ -134,7 +134,7 @@ open class CRRefreshHeaderView: CRRefreshComponent {
         guard isRefreshing == false else {
             if self.window == nil {return}
             let top          = scrollViewInsets.top
-            let offsetY      = scrollView.contentOffset.y
+            let offsetY      = scrollView.contentOffset.y + systemInsetTop
             let height       = frame.size.height
             var scrollingTop = (-offsetY > top) ? -offsetY : top
             scrollingTop     = (scrollingTop > height + top) ? (height + top) : scrollingTop
@@ -147,12 +147,12 @@ open class CRRefreshHeaderView: CRRefreshComponent {
         var isRecordingProgress = false
         defer {
             if isRecordingProgress == true {
-                let percent = -(previousOffsetY + scrollViewInsets.top) / animator.trigger
+                let percent = -(previousOffsetY + scrollViewInsets.top + systemInsetTop) / animator.trigger
                 animator.refresh(view: self, progressDidChange: percent)
             }
         }
-        
-        let offsets = previousOffsetY + scrollViewInsets.top
+
+        let offsets = previousOffsetY + scrollViewInsets.top + systemInsetTop
         if offsets < -animator.trigger {
             if isRefreshing == false {
                 if scrollView.isDragging == false, state == .pulling {
